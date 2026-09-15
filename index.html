@@ -3,379 +3,662 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>منظّم الوقت الأسبوعي | Time Planner</title>
+<title>منظّم الوقت | Material Design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   :root{
-    --bg1:#667eea; --bg2:#764ba2; --bg3:#f093fb;
-    --card:#ffffff;
-    --line:rgba(148,163,184,.25);
-    --line-solid:#e2e8f0;
-    --text:#0f172a;
-    --muted:#64748b;
-    --accent:#6366f1;
-    --accent2:#8b5cf6;
-    --success:#10b981;
-    --danger:#ef4444;
-    --shadow-sm:0 1px 3px rgba(15,23,42,.06);
-    --shadow-md:0 4px 16px rgba(15,23,42,.08);
-    --shadow-lg:0 20px 45px rgba(15,23,42,.15);
-    --radius:16px;
-    --radius-sm:10px;
+    /* Material Design 3 — Google palette */
+    --md-primary:#1a73e8;
+    --md-primary-hover:#1765cc;
+    --md-primary-pressed:#1557b0;
+    --md-primary-container:#e8f0fe;
+    --md-on-primary-container:#1967d2;
+    --md-on-primary:#ffffff;
+
+    --md-surface:#ffffff;
+    --md-surface-1:#f8f9fa;
+    --md-surface-2:#f1f3f4;
+    --md-surface-3:#e8eaed;
+    --md-on-surface:#202124;
+    --md-on-surface-variant:#5f6368;
+    --md-outline:#dadce0;
+    --md-outline-variant:#e8eaed;
+
+    --md-success:#1e8e3e;
+    --md-success-container:#e6f4ea;
+    --md-error:#d93025;
+    --md-error-container:#fce8e6;
+    --md-warning:#f9ab00;
+
+    --md-elev-1:0 1px 2px rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    --md-elev-2:0 1px 2px rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);
+    --md-elev-3:0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.3);
+    --md-elev-4:0 6px 10px 4px rgba(60,64,67,.15), 0 2px 3px rgba(60,64,67,.3);
+
+    --md-r-lg:16px;
+    --md-r-md:12px;
+    --md-r-sm:8px;
+
+    --row-h:68px;
+    --time-col-w:76px;
+    --day-col-w:132px;
   }
 
   html,body{height:100%;}
   body{
-    font-family:'Cairo',-apple-system,'Segoe UI',Tahoma,sans-serif;
-    color:var(--text);
-    background:linear-gradient(135deg,#667eea 0%,#764ba2 45%,#f093fb 100%);
-    background-attachment:fixed;
+    font-family:'Cairo','Roboto',-apple-system,'Segoe UI',Tahoma,sans-serif;
+    color:var(--md-on-surface);
+    background:#f8f9fa;
     min-height:100vh;
-    padding:20px;
+    padding:16px;
     -webkit-font-smoothing:antialiased;
-    position:relative;
-  }
-  body::before{
-    content:'';position:fixed;inset:0;
-    background:
-      radial-gradient(circle at 15% 20%, rgba(255,255,255,.18), transparent 45%),
-      radial-gradient(circle at 85% 80%, rgba(255,255,255,.15), transparent 45%);
-    pointer-events:none;z-index:0;
+    font-weight:500;
   }
 
-  .app{
-    max-width:1400px;margin:0 auto;position:relative;z-index:1;
-    animation:fadeUp .5s ease;
+  .app{max-width:1560px;margin:0 auto;}
+
+  /* ================= Material Top App Bar ================= */
+  .top-bar{
+    display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+    background:var(--md-surface);
+    border-radius:var(--md-r-lg);
+    padding:14px 20px;
+    margin-bottom:12px;
+    box-shadow:var(--md-elev-1);
   }
-  @keyframes fadeUp{
-    from{opacity:0;transform:translateY(12px);}
-    to{opacity:1;transform:translateY(0);}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-icon{
+    width:48px;height:48px;
+    display:grid;place-items:center;
+    background:var(--md-primary-container);
+    color:var(--md-on-primary-container);
+    border-radius:var(--md-r-md);
+    font-size:24px;
+    flex-shrink:0;
+  }
+  .brand-text h1{
+    font-size:20px;font-weight:700;
+    color:var(--md-on-surface);
+    letter-spacing:-.2px;
+    line-height:1.2;
+  }
+  .brand-text .sub{
+    font-size:12.5px;color:var(--md-on-surface-variant);
+    font-weight:500;margin-top:2px;
   }
 
-  /* ================= الترويسة ================= */
-  .header{
-    display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
-    margin-bottom:18px;color:#fff;
-  }
-  .header h1{
-    font-size:26px;font-weight:800;letter-spacing:-.3px;
-    display:flex;align-items:center;gap:12px;
-    text-shadow:0 2px 12px rgba(0,0,0,.2);
-  }
-  .header h1 .icon{
-    width:44px;height:44px;display:grid;place-items:center;
-    background:rgba(255,255,255,.2);backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,.3);border-radius:14px;
-    font-size:22px;
-  }
-  .header .sub{
-    font-size:13px;color:rgba(255,255,255,.85);margin-top:4px;font-weight:500;
-  }
-
-  /* ================= شارة الحفظ ================= */
-  .save-badge{
-    display:flex;align-items:center;gap:8px;
-    background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.3);border-radius:50px;
-    padding:8px 16px;font-size:13px;font-weight:600;color:#fff;
-    transition:.3s;white-space:nowrap;
-  }
-  .save-badge .dot{
-    width:9px;height:9px;border-radius:50%;background:#6ee7b7;
-    box-shadow:0 0 0 0 rgba(110,231,183,.7);
+  /* Chip الحفظ */
+  .save-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 16px;
+    background:var(--md-surface-2);
+    border-radius:100px;
+    font-size:13px;font-weight:600;
+    color:var(--md-on-surface-variant);
+    border:1px solid var(--md-outline-variant);
     transition:.3s;
   }
-  .save-badge.saving .dot{
-    background:#fbbf24;animation:pulse 1s infinite;
+  .save-chip .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--md-success);
+    transition:.3s;
   }
-  .save-badge.saved .dot{background:#6ee7b7;}
+  .save-chip.saving{
+    background:var(--md-primary-container);
+    border-color:transparent;
+    color:var(--md-on-primary-container);
+  }
+  .save-chip.saving .dot{background:var(--md-warning);animation:pulse 1s infinite;}
+  .save-chip.saved{background:var(--md-success-container);border-color:transparent;color:#0d652d;}
+  .save-chip.saved .dot{background:var(--md-success);}
   @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(251,191,36,.7);}
-    70%{box-shadow:0 0 0 10px rgba(251,191,36,0);}
-    100%{box-shadow:0 0 0 0 rgba(251,191,36,0);}
+    0%{box-shadow:0 0 0 0 rgba(249,171,0,.6);}
+    70%{box-shadow:0 0 0 8px rgba(249,171,0,0);}
+    100%{box-shadow:0 0 0 0 rgba(249,171,0,0);}
   }
 
-  /* ================= شريط الأدوات ================= */
+  /* ================= Material Toolbar ================= */
   .toolbar{
-    display:flex;flex-wrap:wrap;gap:12px;align-items:center;
-    background:rgba(255,255,255,.85);backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.6);
-    border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;
-    box-shadow:var(--shadow-lg);
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    background:var(--md-surface);
+    border-radius:var(--md-r-lg);
+    padding:10px 14px;
+    margin-bottom:12px;
+    box-shadow:var(--md-elev-1);
   }
-  .field{
-    display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;
-    color:var(--muted);background:#f8fafc;
-    padding:6px 10px;border-radius:10px;border:1px solid var(--line-solid);
-    transition:.2s;
-  }
-  .field:hover{border-color:#cbd5e1;background:#fff;}
-  .field:focus-within{
-    border-color:var(--accent);background:#fff;
-    box-shadow:0 0 0 3px rgba(99,102,241,.12);
-  }
-  .field label{color:#475569;}
-  .field input,.field select{
-    font-family:inherit;font-size:13px;font-weight:600;
-    border:none;background:transparent;color:var(--text);
-    outline:none;cursor:pointer;padding:2px;
-  }
-  .field select{padding-inline-end:4px;}
 
-  .btn{
-    font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;
-    padding:9px 16px;border-radius:10px;border:1px solid var(--line-solid);
-    background:#fff;color:var(--text);
-    transition:.2s;display:inline-flex;align-items:center;gap:6px;
-    box-shadow:var(--shadow-sm);
+  /* Material Text Fields (outlined) */
+  .md-field{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--md-surface);
+    border:1px solid var(--md-outline);
+    border-radius:var(--md-r-sm);
+    padding:6px 10px;
+    transition:.2s;
+    position:relative;
   }
-  .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);}
-  .btn:active{transform:translateY(0);}
-  .btn.primary{
-    background:linear-gradient(135deg,#6366f1,#8b5cf6);
-    color:#fff;border-color:transparent;
+  .md-field:hover{border-color:#bdc1c6;}
+  .md-field:focus-within{
+    border-color:var(--md-primary);
+    box-shadow:0 0 0 1px var(--md-primary);
   }
-  .btn.primary:hover{
-    box-shadow:0 8px 20px rgba(99,102,241,.4);
+  .md-field label{
+    font-size:12px;font-weight:600;
+    color:var(--md-on-surface-variant);
+    white-space:nowrap;
   }
-  .btn.danger{color:#b91c1c;border-color:#fecaca;background:#fef2f2;}
-  .btn.danger:hover{background:#fee2e2;}
+  .md-field input,
+  .md-field select{
+    font-family:inherit;font-size:13px;font-weight:600;
+    color:var(--md-on-surface);
+    border:none;background:transparent;outline:none;
+    cursor:pointer;padding:2px 0;
+  }
+
+  /* Material Buttons */
+  .md-btn{
+    font-family:inherit;font-size:13.5px;font-weight:600;
+    cursor:pointer;
+    padding:9px 18px;
+    border-radius:100px;
+    border:none;
+    background:transparent;
+    color:var(--md-primary);
+    display:inline-flex;align-items:center;gap:6px;
+    transition:background .2s, box-shadow .2s;
+    white-space:nowrap;
+    position:relative;
+    overflow:hidden;
+  }
+  .md-btn::after{
+    content:'';position:absolute;inset:0;
+    background:currentColor;opacity:0;
+    transition:opacity .2s;pointer-events:none;
+  }
+  .md-btn:hover{background:rgba(26,115,232,.08);}
+  .md-btn:active::after{opacity:.12;}
+  .md-btn.filled{
+    background:var(--md-primary);
+    color:var(--md-on-primary);
+  }
+  .md-btn.filled:hover{
+    background:var(--md-primary-hover);
+    box-shadow:var(--md-elev-1);
+  }
+  .md-btn.tonal{
+    background:var(--md-primary-container);
+    color:var(--md-on-primary-container);
+  }
+  .md-btn.tonal:hover{background:#d2e3fc;}
+  .md-btn.outlined{
+    border:1px solid var(--md-outline);
+    color:var(--md-on-surface);
+    background:var(--md-surface);
+  }
+  .md-btn.outlined:hover{background:var(--md-surface-2);}
+  .md-btn.danger{color:var(--md-error);}
+  .md-btn.danger:hover{background:rgba(217,48,37,.08);}
+  .md-btn.active{
+    background:var(--md-primary);
+    color:var(--md-on-primary);
+    box-shadow:var(--md-elev-1);
+  }
+  .md-btn .badge-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#fff;animation:pulse2 1s infinite;
+  }
+  @keyframes pulse2{0%,100%{opacity:1;}50%{opacity:.3;}}
+
   .spacer{flex:1;}
 
-  /* ================= الجدول ================= */
+  /* Material Switch */
+  .md-switch{
+    display:inline-flex;align-items:center;gap:10px;
+    cursor:pointer;user-select:none;
+    padding:4px 10px;border-radius:100px;
+    transition:background .2s;
+    direction:ltr;
+  }
+  .md-switch:hover{background:var(--md-surface-2);}
+  .md-switch input{display:none;}
+  .md-switch-track{
+    width:40px;height:22px;
+    border-radius:11px;
+    background:var(--md-surface-3);
+    position:relative;
+    transition:background .25s;
+    flex-shrink:0;
+    border:2px solid var(--md-outline);
+    box-sizing:border-box;
+  }
+  .md-switch-thumb{
+    position:absolute;top:50%;left:3px;
+    width:14px;height:14px;
+    border-radius:50%;
+    background:var(--md-on-surface-variant);
+    transform:translateY(-50%);
+    transition:transform .25s, width .2s, height .2s, background .25s;
+  }
+  .md-switch input:checked + .md-switch-track{
+    background:var(--md-primary);
+    border-color:var(--md-primary);
+  }
+  .md-switch input:checked + .md-switch-track .md-switch-thumb{
+    transform:translate(20px,-50%);
+    background:#fff;
+    width:16px;height:16px;
+    left:2px;
+  }
+  .md-switch-label{
+    font-size:13.5px;font-weight:600;
+    color:var(--md-on-surface);
+    direction:rtl;
+  }
+  .md-switch input:checked ~ .md-switch-label{color:var(--md-primary);}
+
+  /* ================= Table Surface ================= */
   .table-wrap{
-    background:var(--card);
-    border-radius:var(--radius);
+    background:var(--md-surface);
+    border-radius:var(--md-r-lg);
     overflow:auto;
     max-height:calc(100vh - 260px);
-    min-height:400px;
-    box-shadow:var(--shadow-lg);
-    border:1px solid rgba(255,255,255,.5);
+    min-height:420px;
+    box-shadow:var(--md-elev-2);
+    border:1px solid var(--md-outline-variant);
+    position:relative;
   }
   .table-wrap::-webkit-scrollbar{width:12px;height:12px;}
-  .table-wrap::-webkit-scrollbar-track{background:#f1f5f9;border-radius:10px;}
+  .table-wrap::-webkit-scrollbar-track{background:var(--md-surface-2);}
   .table-wrap::-webkit-scrollbar-thumb{
-    background:linear-gradient(135deg,#c7d2fe,#a5b4fc);
-    border-radius:10px;border:2px solid #f1f5f9;
+    background:#bdc1c6;border-radius:6px;
+    border:3px solid var(--md-surface-2);
   }
-  .table-wrap::-webkit-scrollbar-thumb:hover{background:#818cf8;}
+  .table-wrap::-webkit-scrollbar-thumb:hover{background:#9aa0a6;}
 
-  table{border-collapse:separate;border-spacing:0;width:100%;min-width:920px;}
+  table{
+    border-collapse:separate;border-spacing:0;
+    table-layout:fixed;
+    width:max-content;
+  }
 
+  /* الرأس: الوقت */
   thead th{
     position:sticky;top:0;z-index:3;
-    background:linear-gradient(180deg,#f8fafc,#eef2ff);
-    font-size:13px;font-weight:800;padding:14px 8px;
-    color:#334155;white-space:nowrap;
-    border-bottom:2px solid var(--line-solid);
-    letter-spacing:.3px;
-  }
-  thead th.today{
-    background:linear-gradient(180deg,#6366f1,#8b5cf6);
-    color:#fff;
-    box-shadow:inset 0 -3px 0 rgba(255,255,255,.4);
-  }
-  thead th.corner{
-    right:0;z-index:4;
-    background:linear-gradient(180deg,#f1f5f9,#e2e8f0);
-    border-inline-end:2px solid var(--line-solid);
-  }
-  thead th.today::after{
-    content:'•اليوم';display:block;font-size:10px;opacity:.9;font-weight:600;
-  }
-
-  tbody th.time{
-    position:sticky;right:0;z-index:2;
-    background:linear-gradient(90deg,#f8fafc,#eef2ff);
-    font-size:12px;font-weight:700;color:#475569;
-    padding:6px 10px;white-space:nowrap;width:80px;
-    border-inline-end:2px solid var(--line-solid);
-    border-bottom:1px solid var(--line);
-    font-variant-numeric:tabular-nums;
-    letter-spacing:.5px;
-  }
-
-  td.cell{
-    position:relative;padding:0;vertical-align:top;
-    background:#fff;border-bottom:1px solid var(--line);
-    border-inline-end:1px solid var(--line);
+    background:var(--md-surface);
+    font-weight:700;
+    padding:10px 6px;
+    color:var(--md-on-surface);
+    border-bottom:1px solid var(--md-outline);
+    border-inline-end:1px solid var(--md-outline-variant);
+    width:var(--time-col-w);
+    min-width:var(--time-col-w);
+    height:52px;
+    vertical-align:middle;
+    text-align:center;
     transition:background .15s;
   }
-  td.cell:nth-child(even){background:#fcfdff;}
-  td.cell:hover{background:#f8faff;}
+  thead th.time-header .time-start{
+    font-size:13px;font-weight:700;
+    color:var(--md-on-surface);
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  thead th.time-header .time-end{
+    font-size:11.5px;font-weight:500;
+    color:var(--md-on-surface-variant);
+    margin-top:4px;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  thead th.corner{
+    right:0;z-index:5;
+    width:var(--day-col-w);min-width:var(--day-col-w);
+    background:var(--md-surface);
+    border-inline-end:1px solid var(--md-outline);
+    font-size:12.5px;
+    color:var(--md-on-surface-variant);
+    font-weight:700;
+  }
 
-  td.cell.today-col{background:#f5f3ff;}
-  td.cell.today-col:hover{background:#ede9fe;}
+  /* عمود الأيام */
+  tbody th.day{
+    position:sticky;right:0;z-index:2;
+    background:var(--md-surface);
+    font-size:14px;font-weight:700;
+    color:var(--md-on-surface);
+    padding:10px 14px;
+    white-space:nowrap;
+    width:var(--day-col-w);min-width:var(--day-col-w);
+    height:var(--row-h);
+    border-inline-end:1px solid var(--md-outline);
+    border-bottom:1px solid var(--md-outline-variant);
+    text-align:right;
+    transition:background .15s;
+  }
+  tbody th.day .day-name{
+    display:flex;align-items:center;gap:8px;
+  }
+  tbody th.day .day-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--md-outline);
+    transition:.3s;
+  }
+  tbody th.day.today{
+    background:var(--md-primary-container);
+    color:var(--md-on-primary-container);
+  }
+  tbody th.day.today .day-dot{
+    background:var(--md-primary);
+    box-shadow:0 0 0 4px rgba(26,115,232,.15);
+  }
+
+  /* الخلايا */
+  td.cell{
+    position:relative;padding:0;vertical-align:top;
+    background:var(--md-surface);
+    border-bottom:1px solid var(--md-outline-variant);
+    border-inline-end:1px solid var(--md-outline-variant);
+    transition:background .15s;
+    height:var(--row-h);
+    overflow:hidden;
+    width:var(--time-col-w);
+    min-width:var(--time-col-w);
+  }
+  td.cell:hover{background:#f8f9fa;}
+  td.cell.today-col{background:#f8fbff;}
 
   td.cell .cell-text{
-    min-height:38px;padding:8px 10px;
-    font-size:12.5px;line-height:1.55;font-weight:500;
-    outline:none;white-space:pre-wrap;word-break:break-word;
-    color:#1e293b;cursor:text;
-    transition:.15s;
-    position:relative;z-index:1;
+    position:absolute;inset:0;
+    padding:8px;
+    font-size:13px;font-weight:600;
+    line-height:1.2;
+    color:var(--md-on-surface);
+    outline:none;
+    white-space:pre-wrap;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+    cursor:text;
+    overflow:hidden;
+    transition:font-size .12s, box-shadow .15s, background .15s;
+    display:grid;
+    place-items:center;
+    text-align:center;
+    align-content:center;
   }
-  td.cell .cell-text:empty::before{
-    content:'＋';
-    color:#cbd5e1;font-weight:400;font-size:14px;
+  td.cell .cell-text.is-empty::before{
+    content:'+';
+    color:#bdc1c6;
+    font-weight:400;
+    font-size:18px;
     opacity:0;transition:.2s;
   }
-  td.cell:hover .cell-text:empty::before{opacity:1;}
+  td.cell:hover .cell-text.is-empty::before{opacity:.7;}
   td.cell .cell-text:focus{
-    box-shadow:inset 0 0 0 2px var(--accent);
-    border-radius:4px;
-    background:rgba(99,102,241,.05);
+    box-shadow:inset 0 0 0 2px var(--md-primary);
+    background:rgba(26,115,232,.05);
+    border-radius:0;
   }
 
+  /* Material color button (FAB mini) */
   td.cell .color-btn{
     position:absolute;top:5px;left:5px;
-    width:16px;height:16px;padding:0;
+    width:18px;height:18px;padding:0;
     border-radius:50%;
     border:2px solid #fff;
-    background:conic-gradient(from 0deg,#ef4444,#f59e0b,#10b981,#3b82f6,#8b5cf6,#ef4444);
+    background:conic-gradient(from 90deg,#ea4335,#fbbc04,#34a853,#4285f4,#a142f4,#ea4335);
     cursor:pointer;
-    opacity:0;transform:scale(.7);
-    transition:.2s;
-    box-shadow:0 2px 6px rgba(0,0,0,.2);
-    z-index:2;
+    opacity:0;transform:scale(.6);
+    transition:.2s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 1px 3px rgba(0,0,0,.3);
+    z-index:3;
   }
   td.cell:hover .color-btn{opacity:1;transform:scale(1);}
-  td.cell .color-btn:hover{transform:scale(1.2) rotate(45deg);}
+  td.cell .color-btn:hover{transform:scale(1.15);}
 
-  /* ================= نافذة الألوان ================= */
+  /* ================= Drag & Drop ================= */
+  table.drag-mode td.cell{
+    cursor:grab;
+  }
+  table.drag-mode td.cell:active{cursor:grabbing;}
+  table.drag-mode td.cell .cell-text{pointer-events:none;}
+  table.drag-mode td.cell .color-btn{display:none;}
+
+  td.cell.dragging{
+    opacity:.4;
+    background:var(--md-surface-2) !important;
+  }
+
+  td.cell.drag-over{
+    background:var(--md-primary-container) !important;
+    box-shadow:inset 0 0 0 2.5px var(--md-primary);
+    position:relative;
+  }
+  td.cell.drag-over::after{
+    content:attr(data-drop-label);
+    position:absolute;top:4px;left:6px;
+    background:var(--md-primary);
+    color:#fff;font-size:10px;font-weight:700;
+    padding:2px 8px;border-radius:100px;
+    letter-spacing:.3px;
+    pointer-events:none;
+    z-index:5;
+  }
+
+  /* ================= Merge ================= */
+  td.cell.merged{
+    background-image:linear-gradient(135deg, rgba(26,115,232,.03), rgba(161,66,244,.05));
+  }
+  td.cell.merged::before{
+    content:'⛓';
+    position:absolute;bottom:3px;left:6px;
+    font-size:10px;color:var(--md-primary);opacity:.6;
+    pointer-events:none;z-index:2;
+  }
+
+  table.merge-mode td.cell{cursor:crosshair;}
+  table.merge-mode td.cell .cell-text{pointer-events:none;user-select:none;}
+  table.merge-mode td.cell .color-btn{display:none;}
+  table.merge-mode td.cell:hover{background:#eef3fe;}
+  table.merge-mode td.cell.merged:hover{
+    background-image:none;
+    background-color:var(--md-error-container) !important;
+    box-shadow:inset 0 0 0 2px var(--md-error);
+  }
+
+  td.cell.selected{
+    background:rgba(26,115,232,.25) !important;
+    background-image:none !important;
+    box-shadow:inset 0 0 0 2.5px var(--md-primary);
+    z-index:1;
+  }
+
+  /* ================= Merge actions bar ================= */
+  .merge-actions{
+    position:fixed;bottom:24px;left:50%;
+    transform:translateX(-50%) translateY(120px);
+    display:flex;gap:8px;align-items:center;
+    background:var(--md-surface);
+    padding:8px 10px;
+    border-radius:100px;
+    box-shadow:var(--md-elev-4);
+    border:1px solid var(--md-outline-variant);
+    z-index:999;
+    transition:.3s cubic-bezier(.34,1.56,.64,1);
+    opacity:0;pointer-events:none;
+  }
+  .merge-actions.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto;}
+  .merge-actions .info{
+    font-size:12.5px;font-weight:600;
+    color:var(--md-on-surface-variant);
+    padding:0 12px;
+    border-inline-end:1px solid var(--md-outline-variant);
+    white-space:nowrap;
+  }
+  .merge-actions .info b{color:var(--md-primary);font-weight:700;}
+
+  /* ================= Color popup ================= */
   .color-popup{
-    position:absolute;z-index:9999;display:grid;
-    grid-template-columns:repeat(7,1fr);gap:6px;padding:12px;
-    background:#fff;border-radius:14px;
-    box-shadow:0 20px 50px rgba(15,23,42,.3);
-    border:1px solid var(--line-solid);
+    position:absolute;z-index:9999;
+    display:grid;grid-template-columns:repeat(7,1fr);
+    gap:6px;padding:12px;
+    background:var(--md-surface);
+    border-radius:var(--md-r-md);
+    box-shadow:var(--md-elev-4);
+    border:1px solid var(--md-outline-variant);
     opacity:0;visibility:hidden;pointer-events:none;
-    transform:scale(.95) translateY(-6px);
-    transition:.18s cubic-bezier(.34,1.56,.64,1);
+    transform:scale(.92) translateY(-8px);
+    transition:.2s cubic-bezier(.34,1.56,.64,1);
   }
   .color-popup.show{
     opacity:1;visibility:visible;pointer-events:auto;
     transform:scale(1) translateY(0);
   }
   .color-popup .sw{
-    width:22px;height:22px;border-radius:7px;padding:0;cursor:pointer;
-    border:2px solid rgba(15,23,42,.08);
+    width:24px;height:24px;border-radius:50%;padding:0;cursor:pointer;
+    border:1px solid var(--md-outline-variant);
     transition:.15s;position:relative;
   }
   .color-popup .sw:hover{
-    transform:scale(1.18);border-color:var(--accent);
-    box-shadow:0 4px 10px rgba(0,0,0,.15);z-index:1;
+    transform:scale(1.18);
+    box-shadow:0 4px 10px rgba(60,64,67,.25);z-index:1;
   }
   .color-popup .sw.active{
-    border-color:var(--accent);
-    box-shadow:0 0 0 2px #fff,0 0 0 4px var(--accent);
+    box-shadow:0 0 0 2px #fff,0 0 0 4px var(--md-primary);
   }
   .color-popup .sw.clear{
-    background:#fff;color:var(--danger);font-size:12px;font-weight:800;
+    background:#fff;color:var(--md-error);font-size:13px;font-weight:700;
     display:flex;align-items:center;justify-content:center;line-height:1;
   }
   .color-popup .custom-color{
-    grid-column:1/-1;width:100%;height:28px;padding:2px;cursor:pointer;
-    border:1px solid var(--line-solid);border-radius:8px;background:#f8fafc;
+    grid-column:1/-1;width:100%;height:30px;padding:2px;cursor:pointer;
+    border:1px solid var(--md-outline);border-radius:var(--md-r-sm);
+    background:var(--md-surface-1);
   }
   .color-popup .custom-color::-webkit-color-swatch-wrapper{padding:2px;}
-  .color-popup .custom-color::-webkit-color-swatch{
-    border:none;border-radius:6px;
-  }
+  .color-popup .custom-color::-webkit-color-swatch{border:none;border-radius:6px;}
 
-  /* ================= التلميح ================= */
+  /* ================= Hints ================= */
   .hint{
-    margin-top:14px;
-    background:rgba(255,255,255,.15);backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:var(--radius-sm);padding:12px 16px;
-    font-size:12.5px;color:rgba(255,255,255,.95);
-    line-height:1.9;font-weight:500;
+    margin-top:12px;
+    background:var(--md-surface);
+    border-radius:var(--md-r-md);
+    padding:12px 18px;
+    font-size:13px;
+    color:var(--md-on-surface-variant);
+    line-height:1.9;
+    font-weight:500;
+    box-shadow:var(--md-elev-1);
+    border:1px solid var(--md-outline-variant);
   }
-  .hint strong{color:#fff;font-weight:800;}
+  .hint strong{color:var(--md-on-surface);font-weight:700;}
   .hint kbd{
-    background:rgba(255,255,255,.25);border-radius:5px;
-    padding:1px 7px;font-family:inherit;font-size:11.5px;
-    border:1px solid rgba(255,255,255,.3);
+    background:var(--md-surface-2);
+    border:1px solid var(--md-outline);
+    border-radius:6px;
+    padding:1px 7px;
+    font-family:inherit;font-size:12px;font-weight:600;
+    color:var(--md-on-surface);
   }
+  .hint.merge-hint{
+    background:var(--md-primary-container);
+    border-color:transparent;
+    color:var(--md-on-primary-container);
+    display:none;
+    font-weight:600;
+  }
+  .hint.merge-hint.show{display:block;}
+  .hint.merge-hint strong,.hint.merge-hint kbd{color:var(--md-on-primary-container);}
+  .hint.merge-hint kbd{background:rgba(255,255,255,.6);border-color:transparent;}
 
-  /* ================= إشعار الحفظ المنبثق ================= */
+  /* ================= Toast ================= */
   .toast{
     position:fixed;bottom:24px;left:50%;
-    transform:translate(-50%,80px);
-    background:rgba(16,185,129,.95);color:#fff;
-    padding:10px 20px;border-radius:50px;
-    font-size:13px;font-weight:700;
-    display:flex;align-items:center;gap:8px;
-    box-shadow:0 10px 30px rgba(16,185,129,.4);
-    opacity:0;pointer-events:none;transition:.35s cubic-bezier(.34,1.56,.64,1);
+    transform:translate(-50%,120px);
+    background:#323232;color:#fff;
+    padding:13px 24px;
+    border-radius:var(--md-r-sm);
+    font-size:13.5px;font-weight:600;
+    display:flex;align-items:center;gap:10px;
+    box-shadow:var(--md-elev-3);
+    opacity:0;pointer-events:none;
+    transition:.35s cubic-bezier(.34,1.56,.64,1);
     z-index:10000;
+    max-width:90vw;
   }
   .toast.show{opacity:1;transform:translate(-50%,0);}
+  .toast.error{background:var(--md-error);}
 
-  /* ================= الطباعة ================= */
+  /* ================= Print ================= */
   @media print{
     body{background:#fff;padding:0;}
-    body::before{display:none;}
-    .toolbar,.hint,.color-btn,.sub,.save-badge,.toast{display:none !important;}
-    .header{color:#000;text-shadow:none;margin-bottom:8px;}
-    .header h1{font-size:18px;}
-    .header h1 .icon{background:#f1f5f9;color:#000;border-color:#e2e8f0;}
-    .table-wrap{
-      max-height:none;overflow:visible;border:none;box-shadow:none;
-      border-radius:0;min-height:0;
-    }
-    table{min-width:0;font-size:9px;}
-    thead th,tbody th.time{position:static;background:#f8fafc !important;color:#000 !important;}
-    thead th.today{background:#dbeafe !important;color:#1d4ed8 !important;}
-    td.cell .cell-text{min-height:14px;font-size:9px;padding:3px 5px;}
-    td.cell .cell-text:empty::before{display:none;}
+    .toolbar,.hint,.color-btn,.sub,.save-chip,.toast,.merge-actions,.md-switch{display:none !important;}
+    .top-bar{box-shadow:none;padding:8px 0;border-radius:0;}
+    .brand-icon{background:transparent !important;color:#000 !important;}
+    .brand-text h1{font-size:16px;}
+    .table-wrap{max-height:none;overflow:visible;box-shadow:none;border-radius:0;border:none;min-height:0;}
+    thead th,tbody th.day{position:static;background:#f8f9fa !important;color:#000 !important;}
+    tbody th.day.today{background:#e8f0fe !important;}
+    td.cell .cell-text{font-size:10px !important;color:#000 !important;font-weight:600;}
+    td.cell .cell-text.is-empty::before{display:none;}
+    td.cell.merged::before{display:none;}
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   }
 
-  /* ================= موبايل ================= */
+  /* ================= Mobile ================= */
   @media(max-width:720px){
-    body{padding:12px;}
-    .header h1{font-size:18px;}
-    .header h1 .icon{width:36px;height:36px;font-size:18px;}
-    .toolbar{padding:10px;gap:8px;}
-    .field{font-size:12px;padding:5px 8px;}
-    .btn{padding:7px 12px;font-size:12px;}
-    .table-wrap{max-height:calc(100vh - 300px);}
-    .hint{font-size:11.5px;padding:10px;}
+    body{padding:10px;}
+    :root{--row-h:60px;--time-col-w:70px;--day-col-w:108px;}
+    .top-bar{padding:10px 14px;}
+    .brand-icon{width:40px;height:40px;font-size:20px;}
+    .brand-text h1{font-size:16px;}
+    .brand-text .sub{font-size:11px;}
+    .toolbar{padding:8px;gap:6px;}
+    .md-field{padding:5px 8px;}
+    .md-field label{font-size:11px;}
+    .md-field input,.md-field select{font-size:12px;}
+    .md-btn{padding:7px 12px;font-size:12.5px;}
+    .table-wrap{max-height:calc(100vh - 320px);}
+    .hint{font-size:11.5px;padding:10px 14px;}
+    td.cell .cell-text{font-size:12px;padding:6px;}
+    tbody th.day{font-size:12.5px;padding:8px 10px;}
+    .merge-actions{flex-wrap:wrap;justify-content:center;max-width:calc(100% - 20px);border-radius:20px;}
+    .save-chip{padding:6px 12px;font-size:12px;}
   }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- الترويسة -->
-  <div class="header">
-    <div>
-      <h1><span class="icon">🗓️</span> منظّم الوقت الأسبوعي</h1>
-      <div class="sub">خطّط أسبوعك بذكاء — كل شيء يُحفظ تلقائيًا في متصفحك ✨</div>
+  <!-- ========== Top App Bar ========== -->
+  <header class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">📅</div>
+      <div class="brand-text">
+        <h1>منظّم الوقت الأسبوعي</h1>
+        <div class="sub">جدول ذكي — حفظ تلقائي • سحب وإفلات • تصدير JSON</div>
+      </div>
     </div>
-    <div class="save-badge" id="saveBadge">
+    <div class="save-chip" id="saveBadge">
       <span class="dot"></span>
       <span id="saveText">جاهز</span>
     </div>
-  </div>
+  </header>
 
-  <!-- شريط الأدوات -->
+  <!-- ========== Toolbar ========== -->
   <div class="toolbar">
-    <div class="field">
-      <label>⏰ من</label>
+    <div class="md-field">
+      <label>من</label>
       <input type="time" id="start" step="900">
     </div>
-    <div class="field">
-      <label>🌙 إلى</label>
+    <div class="md-field">
+      <label>إلى</label>
       <input type="time" id="end" step="900">
     </div>
-    <div class="field">
-      <label>⏱️ المدة</label>
+    <div class="md-field">
+      <label>مدة</label>
       <select id="interval">
         <option value="15">15 دقيقة</option>
         <option value="20">20 دقيقة</option>
@@ -386,165 +669,254 @@
         <option value="120">ساعتان</option>
       </select>
     </div>
+
     <div class="spacer"></div>
-    <button class="btn primary" id="todayBtn">📅 اليوم</button>
-    <button class="btn" id="print">🖨️ طباعة</button>
-    <button class="btn danger" id="clear">🗑️ مسح الكل</button>
+
+    <button class="md-btn tonal" id="todayBtn" title="الانتقال إلى اليوم">📅 اليوم</button>
+
+    <label class="md-switch" title="تفعيل السحب والإفلات">
+      <input type="checkbox" id="dragModeToggle">
+      <span class="md-switch-track"><span class="md-switch-thumb"></span></span>
+      <span class="md-switch-label">سحب</span>
+    </label>
+
+    <button class="md-btn tonal" id="mergeToggle" title="دمج الخانات">🔗 دمج</button>
+    <button class="md-btn outlined" id="importBtn">📥 استيراد</button>
+    <button class="md-btn filled" id="exportBtn">📤 تصدير JSON</button>
+    <button class="md-btn outlined" id="print">🖨️ طباعة</button>
+    <button class="md-btn danger" id="clear">🗑️ مسح</button>
   </div>
 
-  <!-- الجدول -->
+  <!-- ========== Table ========== -->
   <div class="table-wrap">
     <table id="grid"></table>
   </div>
 
-  <!-- التلميح -->
+  <!-- ========== Hints ========== -->
   <div class="hint">
-    💡 <strong>للكتابة:</strong> اضغط أي خانة واكتب مباشرة &nbsp;•&nbsp;
-    <strong>للّون:</strong> مرّر فوق الخانة ثم اضغط الدائرة الملوّنة <kbd>🎨</kbd> &nbsp;•&nbsp;
-    <strong>الحفظ:</strong> تلقائي فوري، حتى لو أغلقت النافذة سيبقى جدولك كما هو 🔒 &nbsp;•&nbsp;
-    <strong>الطباعة:</strong> احصل على نسخة ورقية أنيقة.
+    💡 <strong>الكتابة:</strong> اضغط أي خانة واكتب &nbsp;•&nbsp;
+    <strong>اللون:</strong> مرّر فوق الخانة ثم اضغط الدائرة 🎨 &nbsp;•&nbsp;
+    <strong>السحب:</strong> فعّل مفتاح <kbd>سحب</kbd>، ثم اسحب الخانة. اضغط <kbd>Ctrl</kbd> أثناء الإفلات للنسخ &nbsp;•&nbsp;
+    <strong>الدمج:</strong> <kbd>🔗</kbd> ثم اسحب &nbsp;•&nbsp;
+    <strong>الترتيب:</strong> من الإثنين إلى الأحد
+  </div>
+
+  <div class="hint merge-hint" id="mergeHint">
+    🔗 <strong>وضع الدمج مُفعّل:</strong> اسحب بالمؤشر لتحديد عدة خانات ثم اضغط <b>دمج المحدد</b>. اضغط على أي خانة مدموجة لإلغاء دمجها. <kbd>Esc</kbd> للخروج.
   </div>
 
 </div>
 
-<!-- إشعار الحفظ -->
+<!-- ========== Merge Actions Bar ========== -->
+<div class="merge-actions" id="mergeActions">
+  <div class="info" id="mergeInfo">تم تحديد <b>0</b> خانات</div>
+  <button class="md-btn" id="clearSelectionBtn">إلغاء</button>
+  <button class="md-btn filled" id="confirmMergeBtn">🔗 دمج المحدد</button>
+</div>
+
+<!-- ========== Toast ========== -->
 <div class="toast" id="toast">
-  <span>✓</span> <span id="toastMsg">تم الحفظ تلقائيًا</span>
+  <span>✓</span>
+  <span id="toastMsg">تم الحفظ</span>
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  /* ================= الإعدادات ================= */
-  const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+  /* ================= Constants ================= */
+  // الإثنين أولاً → الأحد أخيراً
+  const DAYS = ['الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'];
 
   const PALETTE = [
-    '#fee2e2','#ffedd5','#fef9c3','#dcfce7','#cffafe','#dbeafe',
-    '#ede9fe','#fce7f3','#f3e8ff','#e2e8f0','#f1f5f9','#ffffff',
-    '#f87171','#fb923c','#facc15','#4ade80','#22d3ee','#60a5fa',
-    '#a78bfa','#f472b6','#94a3b8'
+    '#ffffff','#fce8e6','#fef7e0','#e6f4ea','#e0f7fa','#e8f0fe',
+    '#f3e8fd','#fce4ec','#f1f3f4','#f8f9fa',
+    '#ea4335','#fbbc04','#34a853','#00acc1','#4285f4','#7e57c2',
+    '#ec407a','#8bc34a','#ff9800','#9aa0a6'
   ];
 
-  const LS_KEY = 'timetable_v2';
+  const LS_KEY = 'timetable_v6_material';
 
-  const state = { start: '06:00', end: '23:30', interval: 30, cells: {} };
+  const state = {
+    start: '07:00',
+    end: '22:00',
+    interval: 30,
+    cells: {},
+    merges: []
+  };
 
-  /* ================= الحفظ / التحميل ================= */
-  const saveBadge = document.getElementById('saveBadge');
-  const saveText  = document.getElementById('saveText');
-  const toast     = document.getElementById('toast');
-  const toastMsg  = document.getElementById('toastMsg');
+  /* ================= DOM ================= */
+  const table       = document.getElementById('grid');
+  const saveBadge   = document.getElementById('saveBadge');
+  const saveText    = document.getElementById('saveText');
+  const toast       = document.getElementById('toast');
+  const toastMsg    = document.getElementById('toastMsg');
+  const mergeActions= document.getElementById('mergeActions');
+  const mergeInfo   = document.getElementById('mergeInfo');
+  const mergeToggle = document.getElementById('mergeToggle');
+  const mergeHint   = document.getElementById('mergeHint');
+  const dragToggle  = document.getElementById('dragModeToggle');
 
   let saveTimer, toastTimer, savedTimer;
 
+  /* ================= Persistence ================= */
   function load() {
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === 'object') {
-          if (parsed.start)    state.start    = parsed.start;
-          if (parsed.end)      state.end      = parsed.end;
-          if (parsed.interval) state.interval = parsed.interval;
-          if (parsed.cells)    state.cells    = parsed.cells;
+        const p = JSON.parse(raw);
+        if (p && typeof p === 'object') {
+          if (p.start)    state.start    = p.start;
+          if (p.end)      state.end      = p.end;
+          if (p.interval) state.interval = p.interval;
+          if (p.cells)    state.cells    = p.cells;
+          if (Array.isArray(p.merges)) state.merges = p.merges;
         }
       }
-    } catch (e) { console.warn('تعذّر تحميل البيانات', e); }
+    } catch (e) { console.warn('load error', e); }
   }
-
   function persist() {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify(state));
-      return true;
-    } catch (e) {
-      console.warn('تعذّر الحفظ', e);
-      return false;
-    }
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+    catch (e) { console.warn('save error', e); }
   }
 
   function showSaved() {
     clearTimeout(savedTimer);
     saveBadge.classList.remove('saving');
     saveBadge.classList.add('saved');
-    saveText.textContent = 'تم الحفظ ✓';
+    saveText.textContent = 'تم الحفظ';
     savedTimer = setTimeout(() => {
       saveBadge.classList.remove('saved');
       saveText.textContent = 'جاهز';
     }, 1800);
   }
-
-  function showToast(msg) {
+  function showToast(msg, isError) {
     toastMsg.textContent = msg;
+    toast.classList.toggle('error', !!isError);
     toast.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
   }
-
-  // حفظ فوري (يُستخدم عند إغلاق النافذة أو تغييرات مهمة)
-  function saveNow() {
-    clearTimeout(saveTimer);
-    persist();
-    showSaved();
-  }
-
-  // حفظ مؤجّل (لتقليل الكتابة المتكررة أثناء الكتابة)
+  function saveNow() { clearTimeout(saveTimer); persist(); showSaved(); }
   function saveSoon() {
     saveBadge.classList.remove('saved');
     saveBadge.classList.add('saving');
     saveText.textContent = 'يُحفظ…';
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      persist();
-      showSaved();
-    }, 350);
+    saveTimer = setTimeout(() => { persist(); showSaved(); }, 350);
   }
 
-  /* ================= أدوات الوقت ================= */
-  const toMin  = t => { const p = t.split(':'); return (+p[0]) * 60 + (+p[1]); };
-  const toTime = m => String(Math.floor(m / 60)).padStart(2,'0') + ':' + String(m % 60).padStart(2,'0');
+  /* ================= Time utils ================= */
+  const toMin  = t => { const p = t.split(':'); return (+p[0])*60 + (+p[1]); };
+  const toTime = m => String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
 
-  function buildSlots() {
-    const s = toMin(state.start);
-    const e = toMin(state.end);
-    const step = Number(state.interval) || 30;
+  function buildSlotsFor(start, end, interval) {
+    const s = toMin(start), e = toMin(end), step = Number(interval) || 30;
     const out = [];
-    for (let m = s; m <= e; m += step) out.push(toTime(m));
+    if (e <= s) return out;
+    for (let m = s; m < e; m += step) out.push(toTime(m));
     return out;
   }
+  function buildSlots() { return buildSlotsFor(state.start, state.end, state.interval); }
+  function slotRange(startTime) {
+    const step = Number(state.interval) || 30;
+    const e = toMin(state.end);
+    const s = toMin(startTime);
+    return { start: startTime, end: toTime(Math.min(s + step, e)) };
+  }
 
-  const todayIndex = () => (new Date().getDay() + 1) % 7;
+  // JS: 0=Sun...6=Sat → our index: Mon=0...Sun=6
+  const todayIndex = () => (new Date().getDay() + 6) % 7;
+  const cellKey = (d, t) => 'd' + d + '-' + t;
 
-  /* ================= بناء الجدول ================= */
-  const table = document.getElementById('grid');
+  /* ================= Auto-fit text ================= */
+  const _measure = document.createElement('div');
+  _measure.style.cssText =
+    'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;'+
+    'white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;'+
+    "font-family:'Cairo','Roboto',sans-serif;font-weight:600;line-height:1.2;";
+  document.body.appendChild(_measure);
+
+  function measureH(text, fontSize, width) {
+    _measure.style.fontSize = fontSize + 'px';
+    _measure.style.width = width + 'px';
+    _measure.textContent = text;
+    return _measure.offsetHeight;
+  }
+  const MIN_FONT = 9, MAX_FONT = 18;
+
+  function autoFitFont(el) {
+    if (!el) return;
+    const text = el.textContent || '';
+    if (!text.trim()) { el.style.fontSize = '13px'; return; }
+    const cs = getComputedStyle(el);
+    const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+    const padY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+    const availW = el.clientWidth - padX;
+    const availH = el.clientHeight - padY;
+    if (availW < 14 || availH < 10) { el.style.fontSize = MIN_FONT + 'px'; return; }
+    let lo = MIN_FONT, hi = MAX_FONT, best = MIN_FONT;
+    while (lo <= hi) {
+      const mid = Math.floor((lo+hi)/2);
+      if (measureH(text, mid, availW) <= availH) { best = mid; lo = mid+1; }
+      else hi = mid-1;
+    }
+    el.style.fontSize = best + 'px';
+  }
+  const fitTimers = new WeakMap();
+  function autoFitDebounced(el) {
+    if (!el) return;
+    let t = fitTimers.get(el);
+    if (t) clearTimeout(t);
+    t = setTimeout(() => { fitTimers.delete(el); autoFitFont(el); }, 110);
+    fitTimers.set(el, t);
+  }
+
+  /* ================= Cell rendering ================= */
   const cellEls = new Map();
 
   function ensure(key) {
     if (!state.cells[key]) state.cells[key] = { text: '', color: '' };
     return state.cells[key];
   }
+  function updateEmpty(el) {
+    el.classList.toggle('is-empty', !el.textContent || !el.textContent.trim());
+  }
 
-  function makeCell(dayIdx, time) {
-    const key = 'd' + dayIdx + '-' + time;
+  function makeCell(dayIdx, time, opts) {
+    opts = opts || {};
+    const colspan  = opts.colspan || 1;
+    const rowspan  = opts.rowspan || 1;
+    const mergeIdx = (opts.mergeIdx != null) ? opts.mergeIdx : null;
+
+    const key = cellKey(dayIdx, time);
     const rec = state.cells[key] || { text: '', color: '' };
 
     const td = document.createElement('td');
     td.className = 'cell';
     td.dataset.key = key;
+    td.dataset.day = dayIdx;
+    td.dataset.time = time;
+    if (colspan > 1) td.colSpan = colspan;
+    if (rowspan > 1) td.rowSpan = rowspan;
+    if (colspan > 1 || rowspan > 1) td.classList.add('merged');
+    if (mergeIdx != null) td.dataset.mergeIdx = mergeIdx;
     if (dayIdx === todayIndex()) td.classList.add('today-col');
-    if (rec.color) td.style.background = rec.color;
+    if (rec.color) td.style.backgroundColor = rec.color;
 
     const txt = document.createElement('div');
     txt.className = 'cell-text';
     txt.contentEditable = 'true';
     txt.spellcheck = false;
     txt.textContent = rec.text || '';
+    updateEmpty(txt);
 
     txt.addEventListener('input', () => {
       ensure(key).text = txt.textContent;
+      updateEmpty(txt);
+      autoFitDebounced(txt);
       saveSoon();
     });
-
     txt.addEventListener('paste', e => {
       e.preventDefault();
       const plain = (e.clipboardData || window.clipboardData).getData('text/plain');
@@ -559,269 +931,759 @@
     btn.title = 'اختيار اللون';
     btn.addEventListener('click', ev => {
       ev.stopPropagation();
-      openPopup(btn, key, td);
+      openPopup(btn, key);
     });
     td.appendChild(btn);
+
+    // Drag events (only in drag mode)
+    td.draggable = false;
+    td.addEventListener('dragstart', onDragStart);
+    td.addEventListener('dragend', onDragEnd);
+    td.addEventListener('dragover', onDragOver);
+    td.addEventListener('dragleave', onDragLeave);
+    td.addEventListener('drop', onDrop);
 
     cellEls.set(key, td);
     return td;
   }
 
+  /* ================= Render (transposed) ================= */
   function render() {
     cellEls.clear();
     table.innerHTML = '';
-    const list = buildSlots();
+
+    const slots = buildSlots();
+    const slotIdx = new Map();
+    slots.forEach((t, i) => slotIdx.set(t, i));
     const ti = todayIndex();
 
-    /* الرأس */
+    /* ---- Header row: corner + time slots ---- */
     const thead = document.createElement('thead');
     const hr = document.createElement('tr');
 
     const corner = document.createElement('th');
     corner.className = 'corner';
-    corner.textContent = 'الوقت';
+    corner.textContent = 'اليوم / الوقت';
     hr.appendChild(corner);
 
-    DAYS.forEach((d, i) => {
+    slots.forEach(time => {
       const th = document.createElement('th');
-      th.textContent = d;
-      if (i === ti) th.classList.add('today');
+      th.className = 'time-header';
+      const range = slotRange(time);
+      const startEl = document.createElement('div');
+      startEl.className = 'time-start';
+      startEl.textContent = range.start;
+      const endEl = document.createElement('div');
+      endEl.className = 'time-end';
+      endEl.textContent = range.end;
+      th.appendChild(startEl);
+      th.appendChild(endEl);
       hr.appendChild(th);
     });
 
     thead.appendChild(hr);
     table.appendChild(thead);
 
-    /* الجسم */
-    const tbody = document.createElement('tbody');
-    list.forEach(time => {
-      const tr = document.createElement('tr');
+    /* ---- Coverage map for merges ---- */
+    const coverage = new Map();
+    state.merges.forEach((m, mi) => {
+      const ti1 = slotIdx.get(m.t1);
+      const ti2 = slotIdx.get(m.t2);
+      if (ti1 == null || ti2 == null) return;
+      for (let di = m.d1; di <= m.d2; di++) {
+        for (let t = ti1; t <= ti2; t++) {
+          coverage.set(di + '-' + t, mi);
+        }
+      }
+    });
 
+    /* ---- Body: one row per day ---- */
+    const tbody = document.createElement('tbody');
+
+    DAYS.forEach((day, di) => {
+      const tr = document.createElement('tr');
+      if (di === ti) tr.classList.add('today-row');
+
+      // Day header cell (row header)
       const th = document.createElement('th');
-      th.className = 'time';
-      th.textContent = time;
+      th.className = 'day';
+      if (di === ti) th.classList.add('today');
+      const wrap = document.createElement('div');
+      wrap.className = 'day-name';
+      const dot = document.createElement('span');
+      dot.className = 'day-dot';
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = day;
+      wrap.appendChild(dot);
+      wrap.appendChild(nameSpan);
+      th.appendChild(wrap);
       tr.appendChild(th);
 
-      DAYS.forEach((_, di) => tr.appendChild(makeCell(di, time)));
+      // Time cells
+      slots.forEach((time, tIndex) => {
+        const cov = coverage.get(di + '-' + tIndex);
+
+        if (cov != null) {
+          const m = state.merges[cov];
+          const anchorTi = slotIdx.get(m.t1);
+          if (di === m.d1 && tIndex === anchorTi) {
+            // عدد الأعمدة الزمنية = t2 - t1 + 1
+            const colspan = slotIdx.get(m.t2) - anchorTi + 1;
+            // عدد صفوف الأيام = d2 - d1 + 1
+            const rowspan = m.d2 - m.d1 + 1;
+            tr.appendChild(makeCell(di, m.t1, { colspan, rowspan, mergeIdx: cov }));
+          }
+          // غير نقطة الارتكاز: نتجاوز (مغطاة)
+        } else {
+          tr.appendChild(makeCell(di, time));
+        }
+      });
+
       tbody.appendChild(tr);
     });
+
     table.appendChild(tbody);
+
+    if (mergeState.active) refreshSelectionUI();
+    if (dragMode) table.classList.add('drag-mode');
+
+    requestAnimationFrame(() => {
+      cellEls.forEach(td => {
+        const t = td.querySelector('.cell-text');
+        if (t) autoFitFont(t);
+      });
+    });
   }
 
-  /* ================= نافذة الألوان ================= */
-  const popup = document.createElement('div');
-  popup.className = 'color-popup';
+  /* ================= Drag & Drop ================= */
+  let dragMode = false;
+  let dragSourceKey = null;
 
-  PALETTE.forEach(c => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'sw';
-    b.style.background = c;
-    b.dataset.color = c;
-    b.title = c;
-    popup.appendChild(b);
+  function setDragMode(on) {
+    dragMode = !!on;
+    dragToggle.checked = on;
+    table.classList.toggle('drag-mode', on);
+    if (on) {
+      if (mergeState.active) setMergeMode(false);
+      // تفعيل draggable على كل الخلايا
+      cellEls.forEach(td => { td.draggable = true; });
+      showToast('وضع السحب مُفعّل — اسحب الخانات بين الخلايا');
+    } else {
+      cellEls.forEach(td => { td.draggable = false; });
+      showToast('وضع السحب مُعطّل');
+    }
+  }
+
+  function onDragStart(e) {
+    if (!dragMode) { e.preventDefault(); return; }
+    const td = e.currentTarget;
+    const key = td.dataset.key;
+    // لا تسحب خانة فارغة
+    const rec = state.cells[key];
+    if (!rec || (!rec.text?.trim() && !rec.color)) {
+      e.preventDefault();
+      return;
+    }
+
+    dragSourceKey = key;
+    e.dataTransfer.effectAllowed = 'copyMove';
+    e.dataTransfer.setData('text/plain', key);
+    td.classList.add('dragging');
+
+    // صورة سحب مخصصة
+    try {
+      const rect = td.getBoundingClientRect();
+      const ghost = document.createElement('div');
+      ghost.textContent = rec.text || '';
+      ghost.style.cssText = `
+        position:fixed;top:-9999px;left:-9999px;
+        width:${rect.width}px;height:${rect.height}px;
+        background:${rec.color || '#fff'};
+        border:2px solid #1a73e8;border-radius:8px;
+        display:flex;align-items:center;justify-content:center;
+        font-family:'Cairo',sans-serif;font-weight:600;font-size:13px;
+        color:#202124;text-align:center;padding:6px;
+        box-shadow:0 8px 20px rgba(60,64,67,.35);
+        overflow:hidden;
+      `;
+      document.body.appendChild(ghost);
+      e.dataTransfer.setDragImage(ghost, rect.width/2, rect.height/2);
+      setTimeout(() => ghost.remove(), 0);
+    } catch (err) {}
+  }
+
+  function onDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    document.querySelectorAll('td.cell.drag-over').forEach(el => {
+      el.classList.remove('drag-over');
+      el.removeAttribute('data-drop-label');
+    });
+    dragSourceKey = null;
+  }
+
+  function onDragOver(e) {
+    if (!dragMode || !dragSourceKey) return;
+    const td = e.currentTarget;
+    if (td.dataset.key === dragSourceKey) return;
+    e.preventDefault();
+
+    const isCopy = e.ctrlKey || e.altKey || e.metaKey;
+    e.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
+
+    // تحديث التمييز
+    document.querySelectorAll('td.cell.drag-over').forEach(el => {
+      el.classList.remove('drag-over');
+      el.removeAttribute('data-drop-label');
+    });
+    td.classList.add('drag-over');
+    td.dataset.dropLabel = isCopy ? 'نسخ' : 'نقل';
+  }
+
+  function onDragLeave(e) {
+    const td = e.currentTarget;
+    // لا نزيل التمييز فوراً لتجنب الوميض — سيُزال عند dragover على عنصر آخر
+    // لكن عند مغادرة الخلية فعلاً نزيل
+    if (!td.contains(e.relatedTarget)) {
+      td.classList.remove('drag-over');
+      td.removeAttribute('data-drop-label');
+    }
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+    const td = e.currentTarget;
+    const toKey = td.dataset.key;
+    const fromKey = dragSourceKey;
+    if (!fromKey || !toKey || fromKey === toKey) return;
+
+    const isCopy = e.ctrlKey || e.altKey || e.metaKey;
+
+    const fromData = state.cells[fromKey] || { text: '', color: '' };
+    const toData   = state.cells[toKey]   || { text: '', color: '' };
+
+    if (isCopy) {
+      // نسخ: نضع نسخة في الوجهة (نستبدل النص/اللون)
+      state.cells[toKey] = { text: fromData.text, color: fromData.color };
+    } else {
+      // نقل: إن كانت الوجهة فارغة → نقل مباشر
+      // إن كانت تحتوي على محتوى → تبديل (swap)
+      const toEmpty = !toData.text?.trim() && !toData.color;
+      if (toEmpty) {
+        state.cells[toKey] = { text: fromData.text, color: fromData.color };
+        delete state.cells[fromKey];
+      } else {
+        // تبديل
+        state.cells[fromKey] = { text: toData.text, color: toData.color };
+        state.cells[toKey]   = { text: fromData.text, color: fromData.color };
+      }
+    }
+
+    td.classList.remove('drag-over');
+    td.removeAttribute('data-drop-label');
+    dragSourceKey = null;
+
+    saveNow();
+    render();
+    showToast(isCopy ? '✓ تم النسخ' : '✓ تم النقل');
+  }
+
+  /* ================= Migration on settings change ================= */
+  function migrateCells(oldSettings, newSettings) {
+    if (oldSettings.interval === newSettings.interval &&
+        oldSettings.start === newSettings.start &&
+        oldSettings.end === newSettings.end) {
+      return { cells: state.cells, merges: state.merges };
+    }
+
+    const newSlots = buildSlotsFor(newSettings.start, newSettings.end, newSettings.interval);
+    const newSlotsMin = newSlots.map(toMin);
+    const newMin = toMin(newSettings.start);
+    const newMax = toMin(newSettings.end);
+    const newSlotSet = new Set(newSlots);
+
+    const newCells = {};
+
+    for (const [key, val] of Object.entries(state.cells)) {
+      const sepIdx = key.indexOf('-');
+      const dayPart = key.substring(0, sepIdx);
+      const timePart = key.substring(sepIdx + 1);
+      const tMin = toMin(timePart);
+
+      // خارج النطاق الجديد
+      if (tMin < newMin || tMin >= newMax) continue;
+
+      // إيجاد الخانة الجديدة التي تحتوي هذا الوقت
+      let target = null;
+      for (let i = newSlotsMin.length - 1; i >= 0; i--) {
+        if (newSlotsMin[i] <= tMin) { target = newSlots[i]; break; }
+      }
+      if (!target) continue;
+
+      const newKey = dayPart + '-' + target;
+      if (!newCells[newKey]) newCells[newKey] = { text: '', color: '' };
+      if (val.text && val.text.trim()) {
+        newCells[newKey].text += (newCells[newKey].text ? '\n' : '') + val.text.trim();
+      }
+      if (!newCells[newKey].color && val.color) {
+        newCells[newKey].color = val.color;
+      }
+    }
+
+    // الدمج: نبقي فقط ما زال كلا طرفيه موجودين في الشبكة الجديدة
+    const newMerges = state.merges.filter(m =>
+      newSlotSet.has(m.t1) && newSlotSet.has(m.t2) &&
+      m.d1 >= 0 && m.d2 < 7
+    );
+
+    return { cells: newCells, merges: newMerges };
+  }
+
+  /* ================= Merge mode ================= */
+  const mergeState = {
+    active: false,
+    selecting: false,
+    d1: null, d2: null,
+    t1: null, t2: null
+  };
+
+  function setMergeMode(on) {
+    mergeState.active = !!on;
+    mergeToggle.classList.toggle('active', on);
+    table.classList.toggle('merge-mode', on);
+    mergeHint.classList.toggle('show', on);
+
+    if (on) {
+      if (dragMode) setDragMode(false);
+      mergeToggle.textContent = '🔗 جارٍ الدمج…';
+      clearSelection(false);
+      showToast('وضع الدمج مُفعّل — اسحب لتحديد الخانات');
+    } else {
+      mergeToggle.textContent = '🔗 دمج';
+      clearSelection(false);
+      mergeActions.classList.remove('show');
+    }
+  }
+
+  function clearSelection(updateUI) {
+    mergeState.d1 = mergeState.d2 = null;
+    mergeState.t1 = mergeState.t2 = null;
+    mergeState.selecting = false;
+    if (updateUI !== false) refreshSelectionUI();
+    mergeActions.classList.remove('show');
+  }
+
+  function normalizeSelection() {
+    if (mergeState.d1 == null) return null;
+    const slots = buildSlots();
+    const t1i = slots.indexOf(mergeState.t1);
+    const t2i = slots.indexOf(mergeState.t2);
+    if (t1i < 0 || t2i < 0) return null;
+    return {
+      minD: Math.min(mergeState.d1, mergeState.d2),
+      maxD: Math.max(mergeState.d1, mergeState.d2),
+      minTi: Math.min(t1i, t2i),
+      maxTi: Math.max(t1i, t2i),
+      slots
+    };
+  }
+
+  function refreshSelectionUI() {
+    document.querySelectorAll('td.cell.selected').forEach(el => el.classList.remove('selected'));
+    const sel = normalizeSelection();
+    if (!sel) { mergeActions.classList.remove('show'); return; }
+
+    for (let di = sel.minD; di <= sel.maxD; di++) {
+      for (let ti = sel.minTi; ti <= sel.maxTi; ti++) {
+        const k = cellKey(di, sel.slots[ti]);
+        const td = cellEls.get(k);
+        if (td && !td.dataset.mergeIdx) td.classList.add('selected');
+      }
+    }
+
+    const total = (sel.maxD - sel.minD + 1) * (sel.maxTi - sel.minTi + 1);
+    mergeInfo.innerHTML = 'تم تحديد <b>' + total + '</b> خانات';
+    if (total >= 2) mergeActions.classList.add('show');
+    else mergeActions.classList.remove('show');
+  }
+
+  /* Selection with mouse */
+  table.addEventListener('mousedown', e => {
+    if (!mergeState.active) return;
+    const td = e.target.closest('td.cell');
+    if (!td) return;
+    e.preventDefault();
+
+    if (td.dataset.mergeIdx != null) {
+      const mi = Number(td.dataset.mergeIdx);
+      if (confirm('إلغاء دمج هذه الخانة؟')) removeMerge(mi);
+      return;
+    }
+
+    mergeState.d1 = Number(td.dataset.day);
+    mergeState.d2 = mergeState.d1;
+    mergeState.t1 = td.dataset.time;
+    mergeState.t2 = mergeState.t1;
+    mergeState.selecting = true;
+    refreshSelectionUI();
   });
 
+  table.addEventListener('mouseover', e => {
+    if (!mergeState.active || !mergeState.selecting) return;
+    const td = e.target.closest('td.cell');
+    if (!td || td.dataset.mergeIdx != null) return;
+    mergeState.d2 = Number(td.dataset.day);
+    mergeState.t2 = td.dataset.time;
+    refreshSelectionUI();
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (mergeState.selecting) {
+      mergeState.selecting = false;
+      refreshSelectionUI();
+    }
+  });
+
+  /* Touch */
+  table.addEventListener('touchstart', e => {
+    if (!mergeState.active) return;
+    const td = e.target.closest('td.cell');
+    if (!td || td.dataset.mergeIdx != null) return;
+    mergeState.d1 = Number(td.dataset.day);
+    mergeState.d2 = mergeState.d1;
+    mergeState.t1 = td.dataset.time;
+    mergeState.t2 = mergeState.t1;
+    mergeState.selecting = true;
+    refreshSelectionUI();
+  }, { passive: true });
+
+  table.addEventListener('touchmove', e => {
+    if (!mergeState.active || !mergeState.selecting) return;
+    const t = e.touches[0];
+    if (!t) return;
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    if (!el) return;
+    const td = el.closest('td.cell');
+    if (!td || td.dataset.mergeIdx != null) return;
+    mergeState.d2 = Number(td.dataset.day);
+    mergeState.t2 = td.dataset.time;
+    refreshSelectionUI();
+    e.preventDefault();
+  }, { passive: false });
+
+  table.addEventListener('touchend', () => {
+    if (mergeState.selecting) {
+      mergeState.selecting = false;
+      refreshSelectionUI();
+    }
+  });
+
+  document.getElementById('confirmMergeBtn').addEventListener('click', applyMerge);
+  document.getElementById('clearSelectionBtn').addEventListener('click', () => clearSelection(true));
+
+  function overlap(a1,a2,b1,b2) { return !(a2 < b1 || a1 > b2); }
+
+  function applyMerge() {
+    const sel = normalizeSelection();
+    if (!sel) return;
+    const { minD, maxD, minTi, maxTi, slots } = sel;
+    const minT = slots[minTi];
+
+    for (const m of state.merges) {
+      const mi1 = slots.indexOf(m.t1);
+      const mi2 = slots.indexOf(m.t2);
+      if (mi1 < 0 || mi2 < 0) continue;
+      const dOver = overlap(minD, maxD, m.d1, m.d2);
+      const tOver = overlap(minTi, maxTi, Math.min(mi1,mi2), Math.max(mi1,mi2));
+      if (dOver && tOver) { showToast('⚠️ تداخل مع دمج قائم', true); return; }
+    }
+
+    // جمع النصوص والألوان
+    let combinedText = '';
+    let combinedColor = '';
+    for (let di = minD; di <= maxD; di++) {
+      for (let ti = minTi; ti <= maxTi; ti++) {
+        const k = cellKey(di, slots[ti]);
+        const c = state.cells[k];
+        if (c) {
+          if (c.text && c.text.trim()) combinedText += (combinedText ? '\n' : '') + c.text.trim();
+          if (!combinedColor && c.color) combinedColor = c.color;
+        }
+        delete state.cells[k];
+      }
+    }
+
+    const anchorKey = cellKey(minD, minT);
+    state.cells[anchorKey] = { text: combinedText, color: combinedColor };
+
+    state.merges.push({ d1: minD, d2: maxD, t1: minT, t2: slots[maxTi] });
+
+    saveNow();
+    render();
+    clearSelection(false);
+    showToast('✓ تم دمج الخانات');
+  }
+
+  function removeMerge(idx) {
+    if (idx < 0 || idx >= state.merges.length) return;
+    state.merges.splice(idx, 1);
+    saveNow();
+    render();
+    clearSelection(false);
+    showToast('تم إلغاء الدمج');
+  }
+
+  /* ================= Color popup ================= */
+  const popup = document.createElement('div');
+  popup.className = 'color-popup';
+  PALETTE.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'sw';
+    b.style.background = c; b.dataset.color = c; b.title = c;
+    popup.appendChild(b);
+  });
   const clearSw = document.createElement('button');
   clearSw.type = 'button';
   clearSw.className = 'sw clear';
   clearSw.dataset.color = '';
   clearSw.textContent = '✕';
-  clearSw.title = 'بدون لون (افتراضي)';
+  clearSw.title = 'بدون لون';
   popup.appendChild(clearSw);
 
   const custom = document.createElement('input');
   custom.type = 'color';
   custom.className = 'custom-color';
+  custom.value = '#1a73e8';
   custom.title = 'لون مخصص';
-  custom.value = '#6366f1';
   popup.appendChild(custom);
 
   document.body.appendChild(popup);
-
   let activeKey = null;
-  let activeTd = null;
 
   function applyColor(key, color) {
     ensure(key).color = color;
     const td = cellEls.get(key);
-    if (td) td.style.background = color || '';
+    if (td) td.style.backgroundColor = color || '';
     saveNow();
   }
-
   popup.addEventListener('click', e => {
     const b = e.target.closest('.sw');
     if (!b || !activeKey) return;
     applyColor(activeKey, b.dataset.color);
-    // تأثير بصري على اللون المختار
     popup.querySelectorAll('.sw').forEach(s => s.classList.remove('active'));
     b.classList.add('active');
     hidePopup();
   });
-
-  custom.addEventListener('input', () => {
-    if (activeKey) applyColor(activeKey, custom.value);
-  });
+  custom.addEventListener('input', () => { if (activeKey) applyColor(activeKey, custom.value); });
   custom.addEventListener('change', hidePopup);
 
-  function openPopup(btn, key, td) {
+  function openPopup(btn, key) {
     activeKey = key;
-    activeTd = td;
     popup.classList.add('show');
-
-    // تمييز اللون الحالي إن وُجد
     const current = (state.cells[key] || {}).color || '';
     popup.querySelectorAll('.sw').forEach(s => {
       s.classList.toggle('active', s.dataset.color === current);
     });
     if (current) custom.value = current;
-
     requestAnimationFrame(() => {
       const r = btn.getBoundingClientRect();
-      const pw = popup.offsetWidth;
-      const ph = popup.offsetHeight;
-      const sx = window.scrollX;
-      const sy = window.scrollY;
-
-      let left = r.left - pw / 2 + 8 + sx;
+      const pw = popup.offsetWidth, ph = popup.offsetHeight;
+      const sx = window.scrollX, sy = window.scrollY;
+      let left = r.left - pw/2 + 8 + sx;
       let top  = r.bottom + 8 + sy;
-
       if (r.bottom + ph + 16 > window.innerHeight) top = r.top - ph - 8 + sy;
       left = Math.max(8, Math.min(left, window.innerWidth - pw - 8 + sx));
       top  = Math.max(sy + 8, top);
-
       popup.style.left = left + 'px';
       popup.style.top  = top + 'px';
     });
   }
-
-  function hidePopup() {
-    popup.classList.remove('show');
-    activeKey = null;
-    activeTd = null;
-  }
-
+  function hidePopup() { popup.classList.remove('show'); activeKey = null; }
   document.addEventListener('click', e => {
     if (!popup.contains(e.target) && !e.target.closest('.color-btn')) hidePopup();
   });
   window.addEventListener('resize', hidePopup);
   document.querySelector('.table-wrap').addEventListener('scroll', hidePopup);
 
-  /* ================= شريط الأدوات ================= */
+  /* ================= Toolbar handlers ================= */
   const startIn = document.getElementById('start');
   const endIn   = document.getElementById('end');
   const intIn   = document.getElementById('interval');
 
-  startIn.value = state.start;
-  endIn.value   = state.end;
-  intIn.value   = state.interval;
-
   function readSettings() {
-    const s = startIn.value || '06:00';
-    const e = endIn.value   || '23:30';
-    if (toMin(e) < toMin(s)) {
-      alert('⚠️ وقت النهاية يجب أن يكون بعد وقت البداية.');
+    const s = startIn.value || '07:00';
+    const e = endIn.value   || '22:00';
+    if (toMin(e) <= toMin(s)) {
+      showToast('⚠️ وقت النهاية يجب أن يكون بعد البداية', true);
       startIn.value = state.start;
       endIn.value = state.end;
       return;
     }
-    state.start = s;
-    state.end = e;
-    state.interval = Number(intIn.value) || 30;
+    const newSettings = {
+      start: s,
+      end: e,
+      interval: Number(intIn.value) || 30
+    };
+    const oldSettings = {
+      start: state.start,
+      end: state.end,
+      interval: state.interval
+    };
+
+    // ترحيل دقيق للبيانات
+    const migrated = migrateCells(oldSettings, newSettings);
+    state.cells  = migrated.cells;
+    state.merges = migrated.merges;
+    state.start    = newSettings.start;
+    state.end      = newSettings.end;
+    state.interval = newSettings.interval;
+
     saveNow();
     render();
-    showToast('تم تحديث الجدول');
+    showToast('✓ تم تحديث الجدول');
   }
 
   startIn.addEventListener('change', readSettings);
   endIn.addEventListener('change', readSettings);
   intIn.addEventListener('change', readSettings);
 
-  document.getElementById('print').addEventListener('click', () => {
-    hidePopup();
-    window.print();
-  });
+  mergeToggle.addEventListener('click', () => setMergeMode(!mergeState.active));
+  dragToggle.addEventListener('change', () => setDragMode(dragToggle.checked));
+
+  document.getElementById('print').addEventListener('click', () => { hidePopup(); window.print(); });
 
   document.getElementById('todayBtn').addEventListener('click', () => {
     const ti = todayIndex();
-    // التمرير إلى عمود اليوم
-    const th = table.querySelectorAll('thead th')[ti + 1];
-    if (th) {
-      th.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }
-    // تأثير وميض
+    const th = table.querySelectorAll('tbody th.day')[ti];
+    if (th) th.scrollIntoView({ behavior: 'smooth', block: 'center' });
     const tds = table.querySelectorAll('td.today-col');
     tds.forEach(td => {
       td.style.transition = 'background .4s';
-      td.style.background = '#ddd6fe';
-      setTimeout(() => { td.style.background = (state.cells[td.dataset.key] || {}).color || ''; }, 700);
+      const orig = (state.cells[td.dataset.key] || {}).color || '';
+      td.style.backgroundColor = '#d2e3fc';
+      setTimeout(() => { td.style.backgroundColor = orig; }, 700);
     });
-    showToast('عمود اليوم: ' + DAYS[ti]);
+    showToast('اليوم: ' + DAYS[ti]);
   });
 
   document.getElementById('clear').addEventListener('click', () => {
-    if (!confirm('هل تريد مسح كل محتوى الجدول وألوانه؟\nلا يمكن التراجع عن هذه العملية.')) return;
+    if (!confirm('مسح كل محتوى الجدول وألوانه ودمجاته؟\nلا يمكن التراجع.')) return;
     state.cells = {};
+    state.merges = [];
     saveNow();
     render();
-    showToast('تم مسح الجدول بالكامل');
+    clearSelection(false);
+    showToast('تم مسح الجدول');
   });
 
-  /* ================= الحفظ عند الإغلاق / التنقّل ================= */
-  // حفظ فوري عند مغادرة الصفحة أو تحديثها أو إخفائها
-  window.addEventListener('beforeunload', () => {
-    clearTimeout(saveTimer);
-    persist();
+  /* ================= Export / Import ================= */
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const data = {
+      app: 'timetable-planner',
+      version: 6,
+      style: 'material',
+      exported: new Date().toISOString(),
+      days: DAYS,
+      note: 'المفاتيح = dayIndex-time. dayIndex: 0=الإثنين … 6=الأحد',
+      state: state
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+    a.href = url;
+    a.download = 'timetable-' + stamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('✓ تم تصدير الملف');
   });
 
-  // احتياطي: عند إخفاء الصفحة (تبديل تبويب/جوال)
+  document.getElementById('importBtn').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.style.display = 'none';
+    document.body.appendChild(input);
+
+    input.addEventListener('change', e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) { document.body.removeChild(input); return; }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          const data = parsed && parsed.state ? parsed.state : parsed;
+          if (!data || typeof data !== 'object') throw new Error('bad');
+          if (data.cells && typeof data.cells === 'object') state.cells = data.cells;
+          else state.cells = {};
+          state.merges = Array.isArray(data.merges) ? data.merges : [];
+          if (data.start)    state.start    = data.start;
+          if (data.end)      state.end      = data.end;
+          if (data.interval) state.interval = data.interval;
+          saveNow();
+          startIn.value = state.start;
+          endIn.value = state.end;
+          intIn.value = state.interval;
+          render();
+          clearSelection(false);
+          showToast('✓ تم استيراد الجدول');
+        } catch (err) {
+          showToast('⚠️ ملف JSON غير صالح', true);
+        } finally {
+          document.body.removeChild(input);
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    });
+    input.click();
+  });
+
+  /* ================= Auto-save safety ================= */
+  window.addEventListener('beforeunload', () => { clearTimeout(saveTimer); persist(); });
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      clearTimeout(saveTimer);
-      persist();
-    }
+    if (document.visibilityState === 'hidden') { clearTimeout(saveTimer); persist(); }
   });
-
-  // حفظ دوري كل 10 ثوانٍ كشبكة أمان إضافية
-  setInterval(() => {
-    if (document.visibilityState === 'visible') persist();
-  }, 10000);
-
-  // حفظ فوري عند فقدان التركيز من أي خانة
+  setInterval(() => { if (document.visibilityState === 'visible') persist(); }, 10000);
   table.addEventListener('focusout', e => {
     if (e.target.classList.contains('cell-text')) {
-      clearTimeout(saveTimer);
-      persist();
-      showSaved();
+      clearTimeout(saveTimer); persist(); showSaved();
+      autoFitFont(e.target);
     }
   });
 
-  // اختصارات لوحة المفاتيح
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      cellEls.forEach(td => {
+        const t = td.querySelector('.cell-text');
+        if (t) autoFitFont(t);
+      });
+    }, 150);
+  });
+
+  /* ================= Shortcuts ================= */
   document.addEventListener('keydown', e => {
-    // Ctrl/Cmd + S  =>  حفظ فوري
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-      e.preventDefault();
-      saveNow();
-      showToast('تم الحفظ يدويًا ✓');
+    if (e.key === 'Escape') {
+      if (mergeState.active) setMergeMode(false);
+      else hidePopup();
     }
-    // Ctrl/Cmd + P  =>  طباعة
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault(); saveNow(); showToast('تم الحفظ يدويًا ✓');
+    }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
-      e.preventDefault();
-      hidePopup();
-      window.print();
+      e.preventDefault(); hidePopup(); window.print();
     }
   });
 
-  /* ================= التشغيل ================= */
+  /* ================= Init ================= */
   load();
-  // مزامنة حقول الإدخال بعد التحميل
   startIn.value = state.start;
   endIn.value   = state.end;
   intIn.value   = state.interval;
   render();
-
-  // إشعار ترحيبي إن كانت هناك بيانات محفوظة
-  if (Object.keys(state.cells).length > 0) {
+  if (Object.keys(state.cells).length > 0 || state.merges.length > 0) {
     setTimeout(() => showToast('تم استرجاع جدولك المحفوظ ✓'), 500);
   }
 })();
